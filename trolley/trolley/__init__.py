@@ -12,3 +12,5 @@ from trolley.Headers import Headers
 from trolley.TransportMessage import TransportMessage
 from trolley.Bus import Bus
 from trolley.ContentTypes import ContentTypes
+from trolley.BusConfiguration import BusConfiguration
+from trolley.InMemoryTransport import InMemoryTransport

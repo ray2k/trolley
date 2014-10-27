@@ -29,6 +29,9 @@
     <Compile Include="trolley\Bus.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="trolley\BusConfiguration.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="trolley\ContentTypes.py">
       <SubType>Code</SubType>
     </Compile>
@@ -54,6 +57,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="trolley\Transport.py" />
+    <Compile Include="trolley\InMemoryTransport.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="trolley\__init__.py">
       <SubType>Code</SubType>
     </Compile>
