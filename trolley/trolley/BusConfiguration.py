@@ -51,7 +51,6 @@ class BusConfiguration(object):
 
 	def set_address(self, *args, **kwargs):
 		self._address = trolley.Address(*args, **kwargs)
-		print("bus started, listening on", self._address.location)
 		return self
 
 	def auto_subscribe(self, handlerModule):

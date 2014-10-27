@@ -5,6 +5,7 @@ import io
 import sys
 from trolley import InMemoryTransport
 import eventlet
+import select
 
 class Product:
 	def __init__(self):
@@ -18,7 +19,7 @@ class PongMessage:
 	pass
 
 class PingMessageHandler:
-	Handles = [PingMessage,PongMessage]
+	Handles = [PingMessage]
 
 	def handle(self, message):
 		print("RECEIVED PING")
@@ -44,14 +45,22 @@ def main():
 	
 	bus.start()
 	while(True):
-		line = input()
+		line = async_input()
+		
 		if line == "quit":
 			break
 		else:
-			bus.publish(PingMessage())	
-	
+			bus.publish(PingMessage())
+
 	bus.stop()
 
+def async_input():
+	select.select([sys.stdin], [], [])
+	return sys.stdin.readline().lstrip().rstrip()
+
 if __name__ == '__main__':
+	eventlet.monkey_patch(os=True, select=True, socket=None, thread=True, time=True, psycopg=None)
 	main()
+
+
 
