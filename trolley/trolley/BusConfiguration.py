@@ -7,6 +7,7 @@ def append_module_handlers(sourceMappings, module):
 	classes = inspect.getmembers(module, lambda c: inspect.isclass(c));
 	for name, cls in classes:
 		handledTypes = getattr(cls, "handles", None) #Handles = [FooMessage,BarMessage]
+
 		if isinstance(handledTypes, list):
 			map(append_static_handler, [((sourceMappings, msgType) for msgType in handledTypes)])
 			#for msgType in handledTypes:
@@ -35,6 +36,7 @@ class BusConfiguration(object):
 		self._incoming_transport = None
 		self._outgoing_transport = None
 		self._default_serializer = None
+		self._saga_storage = None
 
 	def set_incoming_transport(self, incomingTransport):
 		self._incoming_transport = incomingTransport
@@ -65,6 +67,9 @@ class BusConfiguration(object):
 		self._default_serializer = serializerType
 		return self
 
+	def use_saga_storage(self, saga_storage_type):
+		self._saga_storage = saga_storage_type
+
 	def create_bus(self):
 		if self._address == None:
 			raise BusConfigurationException("Address configuration missing")
@@ -79,7 +84,10 @@ class BusConfiguration(object):
 
 		incoming = self._incoming_transport(self._address)
 		outgoing = self._outgoing_transport(self._address)
+		
+		sagaStorage = None
+		if self._saga_storage != None:
+			sagaStorage = self._saga_storage()
 
-		#def __init__(self, address, incomingTransport, outgoingTransport, handlerMappings, defaultSerializer=None):
-		return trolley.Bus(self._address, incoming, outgoing, self._handlerMappings)
+		return trolley.Bus(self._address, incoming, outgoing, self._handlerMappings, sagaStorage, self._default_serializer)
 		

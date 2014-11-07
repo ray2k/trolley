@@ -35,6 +35,9 @@ class PongMessageHandler:
 		print("RECEIVED PONG")
 
 def main():
+
+	sw = trolley.SyncWorker(None, None, None)
+
 	cfg = trolley.BusConfiguration()
 	#cfg.auto_subscribe(sys.modules[__name__])
 	cfg.subscribe(PingMessage, PingMessageHandler)

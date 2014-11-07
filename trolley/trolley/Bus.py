@@ -1,9 +1,10 @@
-from trolley import Endpoint, Serializer, TransportBase, IncomingTransport, OutgoingTransport, PickleSerializer
+from trolley import Endpoint, Serializer, TransportBase, IncomingTransport, OutgoingTransport, PickleSerializer, Dispatcher
+from trolley import SyncWorkerPool
 import threading
 import time
 
 class Bus(object):
-	def __init__(self, address, incomingTransport, outgoingTransport, handlerMappings, defaultSerializer=None):
+	def __init__(self, address, incomingTransport, outgoingTransport, handlerMappings, sagaStorage, defaultSerializer=None):
 		
 		if defaultSerializer == None:
 			defaultSerializer = PickleSerializer()
@@ -12,8 +13,11 @@ class Bus(object):
 		self._is_started = False		
 		self._handlerMappings = handlerMappings		
 		self._poller = None
+		self._saga_storage = sagaStorage
 		self._poll_lock = threading.Lock()
 		self._stopping = False
+		
+		#self._dispatcher = Dispatcher(SyncWorkerPool(), sagaStorage)
 
 	def start(self):
 		# sign up for recieve self._endpoint.receive(
@@ -66,7 +70,6 @@ class Bus(object):
 						self._dispatch_message(message, h())
 	
 	def _dispatch_message(self, messageObject, messageHandler):
-		messageHandler.bus = self		
-		messageHandler.handle(messageObject)
+		self._dispatcher.dispatch(messageObject, messageHandler, self)
 
 	# retrieval strategies: greedy, linear throttle, exponential throttle

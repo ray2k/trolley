@@ -35,6 +35,9 @@
     <Compile Include="trolley\ContentTypes.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="trolley\Dispatcher.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="trolley\Headers.py">
       <SubType>Code</SubType>
     </Compile>
@@ -50,6 +53,9 @@
     <Compile Include="trolley\PickleSerializer.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="trolley\Saga.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="trolley\Serializer.py">
       <SubType>Code</SubType>
     </Compile>
@@ -58,6 +64,9 @@
     </Compile>
     <Compile Include="trolley\Transport.py" />
     <Compile Include="trolley\InMemoryTransport.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="trolley\Worker.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="trolley\__init__.py">

@@ -14,3 +14,7 @@ from trolley.Bus import Bus
 from trolley.ContentTypes import ContentTypes
 from trolley.BusConfiguration import BusConfiguration
 from trolley.InMemoryTransport import InMemoryTransport
+from trolley.Worker import Foo
+from trolley.Worker import SyncWorker
+from trolley.Worker import SyncWorkerPool
+from trolley.Dispatcher import Dispatcher
