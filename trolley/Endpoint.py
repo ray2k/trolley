@@ -1,17 +1,20 @@
-import trolley.TransportMessage
+from .TransportMessage import TransportMessage
 
 class Endpoint(object):
 	def __init__(self, address, incomingTransport, outgoingTransport, defaultSerializer):
+		#: :type address: Address	
+		#: :type incomingTransport: IncomingTransport
+		#: :type outgoingTransport: OutgoingTransport
+		#: :type defaultSerializer: Serializer			
 		self._address = address
 		self._incomingTransport = incomingTransport
 		self._outgoingTransport = outgoingTransport
-		self._defaultSerializer = defaultSerializer;
-	
+		self._defaultSerializer = defaultSerializer
+		
 	def open(self):
-		self._incomingTransport
 		return
 
-	def close(self):
+	def close(self):		
 		return
 
 	@property 
@@ -23,7 +26,7 @@ class Endpoint(object):
 		return self._address;
 
 	def send(self, message):
-		transportMessage = trolley.TransportMessage()
+		transportMessage = TransportMessage()
 		transportMessage.body = self.default_serializer.serialize(message);
 		transportMessage.content_type = self.default_serializer.content_type;
 		transportMessage.message_type = type(message)

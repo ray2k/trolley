@@ -1,7 +1,7 @@
 class Address:
 	def __init__(self, *args, **kwargs):
 		self._settings = {}
-		for key, value in kwargs.items():      # styles is a regular dictionary
+		for key, value in kwargs.items():
 			self._settings[key] = value
 		self._location = Address.build_location(self._settings)
 		
@@ -17,7 +17,7 @@ class Address:
 		
 	@property
 	def location(self):
-	 return self._location
+		return self._location
 	
 	@location.setter
 	def location(self, value):

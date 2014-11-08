@@ -1,5 +1,5 @@
 from .Serializer import Serializer
-from trolley.ContentTypes import ContentTypes
+from .ContentTypes import ContentTypes
 import pickle
 import io
 
@@ -8,10 +8,10 @@ class PickleSerializer(Serializer):
 		Serializer.__init__(self, ContentTypes.CONTENT_TYPE_BINARY_PICKLE)
 
 	def serialize(self, messageBody):
-		bytes = io.BytesIO()
-		pickle.dump(messageBody, bytes)	
-		bytes.seek(0)
-		return bytes	
+		theBytes = io.BytesIO()
+		pickle.dump(messageBody, theBytes)	
+		theBytes.seek(0)
+		return theBytes	
 
 	def deserialize(self, input):
 		return pickle.load(input)

@@ -1,4 +1,4 @@
-from trolley.Headers import Headers
+from .Headers import Headers
 import io
 
 class TransportMessage:

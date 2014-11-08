@@ -1,15 +1,15 @@
-import inspect
-import time
-
 class DispatchError(BaseException):
 	pass
 
 class Dispatcher:
 	def __init__(self, worker_factory, saga_storage):
+		#: :type worker_factory: WorkerPool	
+		#: :type saga_storage: SagaStorage	
 		self._worker_factory = worker_factory
 		self._saga_storage = saga_storage
 
 	def dispatch(self, message, handler, bus):
+		#: :type bus: Bus
 		result = []
 
 		correlated = False
@@ -31,12 +31,10 @@ class Dispatcher:
 				handler.is_new = True
 			else:
 				sagaData = self._saga_storage.fetch(correlationId)
-				handler.is_new = False
-			handler.bus = bus
+				handler.is_new = False			
 			handler.data = sagaData
-
-			result.append(self._worker_factory.create(message, handler))
-		else:
-			result.append(self._worker_factory.create(message, handler))
+			
+		handler.bus = bus
+		result.append(self._worker_factory.spawn(message, handler))
 
 		# should scan saga handlers at bus startup to store what they handle/are initiated by/saga data types

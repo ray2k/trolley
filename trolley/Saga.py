@@ -9,7 +9,7 @@ def _validate_handled_type(saga_handler, message_types):
 		if h == None:
 			raise SagaError("Unexpected 'None' in handled message list")
 		try:
-			instance = h()
+			h()
 		except Exception as e:
 			raise SagaError("Unable to create instance of handled message " + str(h), e)
 
@@ -44,13 +44,13 @@ def validate(saga_handler):
 		raise SagaError("Saga handler does not have a 'initiated_by' attribute")
 
 	initiatedby = getattr(saga_handler, "initiated_by", None)
-	if initiatedBy == None:
+	if initiatedby == None:
 		raise SagaError("Saga handler does not declare an initiator message type")
 	if isinstance(initiatedby, type) == False:
 		raise SagaError("'initiated_by' attribute must be a single type")
 	else:
 		try:
-			initiatedBy()
+			initiatedby()
 		except BaseException as e:
 			raise SagaError("Unable to create instance of initiator message " + str(h), e)
 		
@@ -65,13 +65,6 @@ def validate(saga_handler):
 			sagaDataType()
 		except BaseException as e:
 			raise SagaError("Unable to create instance of saga data type " + str(sagaDataType), e)
-
-class FooSaga(Saga):
-	def handle(self, foo_message):
-		pass
-
-	def foomessage(self, message):
-		pass
 
 class SagaData(object):
 	def __init__(self):
@@ -90,19 +83,21 @@ class SagaStorage(object):
 		pass
 
 	def store(self, saga_data):
+		#: :type saga_data: SagaData	
 		pass
 
 class InMemorySagaStorage(SagaStorage):
 	data = {}
 
 	def get_saga_data(self, id):
-		if id in data:
-			return data[id]
+		if id in self.data:
+			return self.data[id]
 		else: 
 			return None
 
 	def set_saga_data(self, saga_data):
-		data[saga_data.id] = saga_data
+		#: :type saga_data: SagaData	
+		self.data[saga_data.id] = saga_data
 
 class Saga(object):
 	initiated_by = []
@@ -138,8 +133,3 @@ class Saga(object):
 	@is_new.setter
 	def is_new(self, value):
 		return self.is_new
-
-class StarbucksSaga(Saga):
-	def __init__(self):
-		Saga.__init__()
-		self.map(FooMessage, Handle_Foo)

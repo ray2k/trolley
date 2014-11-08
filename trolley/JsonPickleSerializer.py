@@ -1,5 +1,5 @@
 from .Serializer import Serializer
-from trolley.ContentTypes import ContentTypes
+from .ContentTypes import ContentTypes
 import jsonpickle
 
 class JsonPickleSerializer(Serializer):

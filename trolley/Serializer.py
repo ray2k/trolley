@@ -1,7 +1,4 @@
 import abc
-import pickle
-import io
-from trolley.ContentTypes import ContentTypes
 
 class Serializer(object):
     __metaclass__ = abc.ABCMeta
@@ -14,7 +11,7 @@ class Serializer(object):
 
     @staticmethod
     def register(contentType, serializer_func):
-        serializers[contentType] = serializer_func
+        Serializer._serializers[contentType] = serializer_func
 
     @staticmethod
     def get_serializer(contentType):
