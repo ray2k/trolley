@@ -6,12 +6,13 @@ def append_module_handlers(sourceMappings, module):
         handledTypes = getattr(cls, "handles", None) #Handles = [FooMessage,BarMessage]
 
         if isinstance(handledTypes, list):
-            map(append_static_handler, [((sourceMappings, msgType) for msgType in handledTypes)])
-            #for msgType in handledTypes:
-                #append_static_handler(sourceMappings, msgType, cls)
+            for msgType in handledTypes:
+                append_static_handler(sourceMappings, msgType, cls)
         elif isinstance(handledTypes, type): # Handles = SomeMessage
             append_static_handler(sourceMappings, handledTypes, cls)
             
+    print_handler_mappings(sourceMappings)
+    
 def append_static_handler(sourceMappings, messageType, handlerType):    
     if messageType not in sourceMappings:
         sourceMappings[messageType] = []
@@ -22,3 +23,20 @@ def print_handler_mappings(mappings):
         for subscriberType in mappings[messageType]:            
             print("Message Type", messageType.__name__, "is handled by", subscriberType.__name__)
             
+def get_handled_types(handler):
+    initiatedBy = getattr(handler, "initiated_by", None)
+    handles = getattr(handler, "handles", None)
+    
+    result = []
+    
+    if initiatedBy != None and isinstance(initiatedBy, type):
+        result.append(initiatedBy)
+    if handles != None and isinstance(handles, type):
+        result.append(handles)
+    if handles != None and isinstance(handles, list):
+        for t in handles:
+            if isinstance(t, type):            
+                result.append(t)
+    
+    result = list(set(result))
+    return result

@@ -13,4 +13,4 @@ from .Dispatcher import Dispatcher, DispatchError
 from .Bus import Bus
 from .Util import append_module_handlers, append_static_handler
 from .BusConfiguration import BusConfiguration, BusConfigurationException
-from .Saga import SagaError, SagaData, SagaStorage, Saga
+from .Saga import SagaError, SagaData, SagaStorage, Saga, AutoMappedSagaMixin

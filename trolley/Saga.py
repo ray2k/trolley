@@ -1,5 +1,7 @@
 import uuid
 import inspect
+import trolley.Util
+from trolley.Util import get_handled_types
 
 class SagaError(BaseException):
 	pass
@@ -98,9 +100,9 @@ class InMemorySagaStorage(SagaStorage):
 	def set_saga_data(self, saga_data):
 		#: :type saga_data: SagaData	
 		self.data[saga_data.id] = saga_data
-
-class Saga(object):
-	initiated_by = []
+		
+class Saga:
+	initiated_by = None	
 	handles = []
 	saga_data_type = None
 
@@ -108,6 +110,7 @@ class Saga(object):
 		self._data = None
 		self._is_new = False
 		self._mappings = {}
+		self.configure_mappings()
 
 	def map(self, message_type, handler_func):
 		self._mappings[message_type] = handler_func
@@ -116,7 +119,13 @@ class Saga(object):
 		return message_type in self._mappings
 
 	def handle(self, message):
-		self._mappings[type(message)](message)
+		if type(message) in self._mappings:
+			self._mappings[type(message)](message)
+		else:
+			raise SagaError("No internal handler for type " + str(type(message)))	
+	
+	def configure_mappings(self):
+		pass
 
 	@property
 	def data(self):
@@ -132,4 +141,16 @@ class Saga(object):
 
 	@is_new.setter
 	def is_new(self, value):
-		return self.is_new
+		self._is_new = value
+		
+class AutoMappedSagaMixin:	
+	def configure_mappings(self):	
+		allMethodTuples = inspect.getmembers(self, lambda f: inspect.ismethod(f) or inspect.isfunction(f))
+		handleMethodsByname = dict( (x, y) for x, y in allMethodTuples if x.startswith("handle_"))
+		
+		handledTypes = get_handled_types(self)
+		for msgType in handledTypes:
+			methodName = "handle_" + msgType.__name__
+			if methodName in handleMethodsByname:
+				self.map(msgType, handleMethodsByname[methodName])
+		
